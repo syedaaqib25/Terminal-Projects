@@ -1,0 +1,169 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <queue>
+using namespace std;
+//structure to represent a book
+struct Book {
+int id;
+string title;
+string author;
+bool isIssued;
+};
+//vector to store books
+vector<Book> books;
+//function for add a new book
+void addBook(int id, const string& title, const string& author) {
+Book newBook = {id, title, author, false};
+books.push_back(newBook);
+cout << "Book added successfully!\n";
+}
+//function for searching a book by id
+Book* searchBookByID(int id) {
+for (auto& book : books) {
+if (book.id == id) {
+return &book;
+}
+}
+return nullptr;
+}
+//function for searching a book by title
+Book* searchBookByTitle(const string& title) {
+for (auto& book : books) {
+if (book.title == title) {
+return &book;
+}
+}
+return nullptr;
+}
+//structure to store issued details
+struct IssueDetails {
+int bookID;
+string studentName;
+};
+//queue to manage issued books
+queue<IssueDetails> issuedBooks;
+//function to issue a book
+void issueBook(int id, const string& studentName) {
+Book* book = searchBookByID(id);
+if (book && !book->isIssued) {
+book->isIssued = true;
+issuedBooks.push({id, studentName});
+cout << "Book issued successfully!\n";
+} else {
+cout << "Book not available or already issued!\n";
+}
+}
+//function to return a book
+void returnBook(int id) {
+Book* book = searchBookByID(id);
+if (book && book->isIssued) {
+book->isIssued = false;
+queue<IssueDetails> tempQueue;
+while (!issuedBooks.empty()) {
+IssueDetails details = issuedBooks.front();
+issuedBooks.pop();
+if (details.bookID != id) {
+tempQueue.push(details);
+}
+}
+issuedBooks = tempQueue;
+cout << "Book returned successfully!\n";
+} else {
+cout << "Book not found or not issued!\n";
+}
+}
+//function to list all books
+void listAllBooks() {
+sort(books.begin(), books.end(), [](const Book& a, const Book& b) {
+return a.title < b.title;
+});
+for (const auto& book : books) {
+cout << "ID: " << book.id << ", Title: " << book.title
+<< ", Author: " << book.author
+<< ", Status: " << (book.isIssued ? "Issued" : "Available") << endl;
+}
+}
+//function to delete a book
+void deleteBook(int id) {
+auto it = remove_if(books.begin(), books.end(), [id](const Book& book) {
+return book.id == id;
+});
+if (it != books.end()) {
+books.erase(it, books.end());
+cout << "Book deleted successfully!\n";
+} else {
+cout << "Book not found!\n";
+}
+}
+//function to display the menu
+void displayMenu() {
+cout << "Library Management System\n";
+cout << "1. Add New Book\n";
+cout << "2. Search Book\n";
+cout << "3. Issue Book\n";
+cout << "4. Return Book\n";
+cout << "5. List All Books\n";
+cout << "6. Delete Book\n";
+cout << "7. Exit\n";
+cout << "Enter your choice: ";
+}
+int main() {
+int choice, id;
+string title, author, studentName;
+while (true) {
+displayMenu();
+cin >> choice;
+switch (choice) {
+case 1:
+cout << "Enter Book ID: ";
+cin >> id;
+cin.ignore();
+cout << "Enter Title: ";
+getline(cin, title);
+cout << "Enter Author: ";
+getline(cin, author);
+addBook(id, title, author);
+break;
+case 2:
+cout << "Enter Book Title: ";
+cin.ignore();
+getline(cin, title);
+if (Book* book = searchBookByTitle(title)) {
+cout << "Book Found: ID: " << book->id << ", Title: " << book->title
+<< ", Author: " << book->author
+<< ", Status: " << (book->isIssued ? "Issued" : "Available") << endl;
+} else {
+cout << "Book not found!\n";
+}
+break;
+case 3:
+cout << "Enter Book ID: ";
+cin >> id;
+cin.ignore();
+cout << "Enter Student Name: ";
+getline(cin, studentName);
+issueBook(id, studentName);
+break;
+case 4:
+cout << "Enter Book ID: ";
+cin >> id;
+returnBook(id);
+break;
+case 5:
+listAllBooks();
+break;
+case 6:
+cout << "Enter Book ID: ";
+cin >> id;
+deleteBook(id);
+break;
+case 7:
+return 0;
+default:
+cout << "Invalid choice! Please try again.\n";
+}
+}
+return 0;
+}
