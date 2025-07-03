@@ -1,44 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 struct sell {
     int prop_id;
     char name[25];
     float price;
 };
+
 struct buy {
     int prop_id;
     char name[25];
     float budget;
 };
+
 struct edit {
     int prop_id;
     char name[25];
     float budget;
 };
+
 struct del {
     int prop_id;
 };
+
 int add();
 int display();
 int search();
 int buy_sell();
 int edit_delete();
+
 int main() {
     int n;
     printf("Enter choice:\n1.Add\n2.Display\n3.Search\n4.Buy/Sell\n5.Edit/Delete\n");
     scanf("%d", &n);
-    if (n == 1) {
-        add();
-    } else if (n == 2) {
-        display();
-    } else if (n == 3) {
-        search();
-    } else if (n == 4) {
-        buy_sell();
-    } else if (n == 5) {
-        edit_delete();
-    } else {
-        printf("Invalid number.\n");
+
+    switch(n) {
+        case 1: add(); break;
+        case 2: display(); break;
+        case 3: search(); break;
+        case 4: buy_sell(); break;
+        case 5: edit_delete(); break;
+        default: printf("Invalid number.\n");
     }
     return 0;
 }
@@ -47,91 +49,94 @@ int add() {
     int n;
     printf("ENTER YOUR CHOICE TO ADD RECORDS (1: FLATS, 2: LAND, 3: BANK DETAILS): ");
     scanf("%d", &n);
-    getchar(); // Clear newline from buffer
+    getchar();
+
     FILE* fp;
     char c;
-    if (n == 1) {
-        fp = fopen("flatrecords.txt", "a");
-        if (!fp) { perror("Error"); return 1; }
-        printf("Enter flat details (Ctrl+Z to stop):\n");
-        while ((c = getchar()) != EOF) putc(c, fp);
-        fclose(fp);
-    } else if (n == 2) {
-        fp = fopen("landrecords.txt", "a");
-        if (!fp) { perror("Error"); return 1; }
-        printf("Enter land details (Ctrl+Z to stop):\n");
-        while ((c = getchar()) != EOF) putc(c, fp);
-        fclose(fp);
-    } else if (n == 3) {
-        fp = fopen("bankrecords.txt", "a");
-        if (!fp) { perror("Error"); return 1; }
-        printf("Enter bank details (Ctrl+Z to stop):\n");
-        while ((c = getchar()) != EOF) putc(c, fp);
-        fclose(fp);
-    } else {
-        printf("INVALID CHOICE\n");
+
+    switch(n) {
+        case 1:
+            fp = fopen("flatrecords.txt", "a");
+            break;
+        case 2:
+            fp = fopen("landrecords.txt", "a");
+            break;
+        case 3:
+            fp = fopen("bankrecords.txt", "a");
+            break;
+        default:
+            printf("INVALID CHOICE\n");
+            return 0;
     }
+
+    if (!fp) { perror("Error"); return 1; }
+    printf("Enter details (Ctrl+Z to stop):\n");
+    while ((c = getchar()) != EOF) putc(c, fp);
+    fclose(fp);
+
     return 0;
 }
+
 int display() {
     int n;
     printf("ENTER YOUR CHOICE TO DISPLAY RECORDS (1: FLATS, 2: LAND): ");
     scanf("%d", &n);
+
     FILE* fp;
     char c;
+
     if (n == 1) {
         fp = fopen("flatrecords.txt", "r");
-        if (!fp) { perror("Error"); return 1; }
         printf("Flat Records:\n");
-        while ((c = getc(fp)) != EOF) printf("%c", c);
-        fclose(fp);
     } else if (n == 2) {
         fp = fopen("landrecords.txt", "r");
-        if (!fp) { perror("Error"); return 1; }
         printf("Land Records:\n");
-        while ((c = getc(fp)) != EOF) printf("%c", c);
-        fclose(fp);
     } else {
         printf("INVALID CHOICE\n");
+        return 0;
     }
+
+    if (!fp) { perror("Error"); return 1; }
+    while ((c = getc(fp)) != EOF) printf("%c", c);
+    fclose(fp);
     return 0;
 }
+
 int search() {
-    int n;
+    int n, id;
     printf("ENTER YOUR CHOICE TO SEARCH (1: FLATS, 2: LAND, 3: BANK): ");
     scanf("%d", &n);
-    int id;
     printf("Enter ID to search: ");
     scanf("%d", &id);
+
     FILE* fp;
     char c;
+
     if (n == 1) {
         fp = fopen("flatrecords.txt", "r");
-        if (!fp) { perror("Error"); return 1; }
         printf("Flat Record for ID %d:\n", id);
-        while ((c = getc(fp)) != EOF) printf("%c", c);
-        fclose(fp);
     } else if (n == 2) {
         fp = fopen("landrecords.txt", "r");
-        if (!fp) { perror("Error"); return 1; }
         printf("Land Record for ID %d:\n", id);
-        while ((c = getc(fp)) != EOF) printf("%c", c);
-        fclose(fp);
     } else if (n == 3) {
         fp = fopen("bankrecords.txt", "r");
-        if (!fp) { perror("Error"); return 1; }
         printf("Bank Record for ID %d:\n", id);
-        while ((c = getc(fp)) != EOF) printf("%c", c);
-        fclose(fp);
     } else {
         printf("INVALID CHOICE\n");
+        return 0;
     }
+
+    if (!fp) { perror("Error"); return 1; }
+    while ((c = getc(fp)) != EOF) printf("%c", c);
+    fclose(fp);
     return 0;
 }
+
 int buy_sell() {
     int n;
     printf("ENTER YOUR CHOICE (1: BUY, 2: SELL): ");
     scanf("%d", &n);
+
     if (n == 1) {
         struct buy b;
         printf("Enter property ID: "); scanf("%d", &b.prop_id);
@@ -171,7 +176,7 @@ int edit_delete() {
     } else if (n == 2) {
         struct del d;
         printf("Enter ID to delete: "); scanf("%d", &d.prop_id);
-        printf("RECORDS DELETED (not really, simulation only).\n");
+        printf("RECORDS DELETED (simulation only).\n");
     } else {
         printf("INVALID CHOICE\n");
     }
