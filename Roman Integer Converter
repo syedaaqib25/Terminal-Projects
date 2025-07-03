@@ -1,0 +1,40 @@
+class Roman:
+    def int_to_roman(self, num):
+        lookup = [
+            (1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'),
+            (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'),
+            (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')
+        ]
+        res = ""
+        for (val, roman) in lookup:
+            count, num = divmod(num, val)
+            res += roman * count
+        return res
+
+    def roman_to_int(self, s):
+        roman_map = {
+            'I': 1, 'V': 5, 'X': 10, 'L': 50,
+            'C': 100, 'D': 500, 'M': 1000
+        }
+        total = 0
+        prev_value = 0
+        for ch in reversed(s):
+            value = roman_map[ch]
+            if value < prev_value:
+                total -= value
+            else:
+                total += value
+                prev_value = value
+        return total
+
+r = Roman()
+choice = input("Choose (1) Integer to Roman or (2) Roman to Integer: ")
+
+if choice == '1':
+    n = int(input("Enter Integer: "))
+    print("Roman Numeral:", r.int_to_roman(n))
+elif choice == '2':
+    roman_input = input("Enter Roman Numeral: ").upper()
+    print("Integer:", r.roman_to_int(roman_input))
+else:
+    print("Invalid choice")
