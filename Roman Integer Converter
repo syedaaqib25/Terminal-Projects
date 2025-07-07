@@ -1,40 +1,46 @@
-class Roman:
-    def int_to_roman(self, num):
-        lookup = [
-            (1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'),
-            (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'),
-            (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')
-        ]
-        res = ""
-        for (val, roman) in lookup:
-            count, num = divmod(num, val)
-            res += roman * count
-        return res
+#Convert Interger into Roman Numeral and Roman Numeral into Integer
+def Int_Roman(int):
+    int = int(input("Enter Integer: "))
+def Roman_Int(ro):
+    ro = input("Enter Roman Integer: ")
+#Choose any option
+print("1.Integer to Roman")    
+print("2.Roman to integer")
+print("3.Stop")
+#Group project 18 by Syed
+while True:
+    choose = input("Enter choice(1/2/3):")
+    if choose in ("1","2","3"):
 
-    def roman_to_int(self, s):
-        roman_map = {
-            'I': 1, 'V': 5, 'X': 10, 'L': 50,
-            'C': 100, 'D': 500, 'M': 1000
-        }
-        total = 0
-        prev_value = 0
-        for ch in reversed(s):
-            value = roman_map[ch]
-            if value < prev_value:
-                total -= value
-            else:
-                total += value
-                prev_value = value
-        return total
+        if choose == "1":
+            class py_Value:
+                def IntToRoman(self, num):
+                    values = [(1000, 'M'),(900, 'CM'),(500, 'D'),(400, 'CD'),(100, 'C'),(90, 'XC'),
+                        (50, 'L'),(40, 'XL'),(10, 'X'),(9, 'IX'),(5, 'V'),(4, 'IV'),(1, 'I'),]
+                    res = ""
+                    for (n, roman) in values:
+                        (d, num) = divmod(num, n)
+                        res += roman * d
+                    return res
+            x = int(input("Input Integer: ",))
+            print("Its Roman Numeral is:",py_Value().IntToRoman(x))
+        if choose == "2":
+            class py_Value2:
+                def roman_to_int(self, s):
+                    rom_val = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+                    int_val = 0
+                    for i in range(len(s)):
+                        if i > 0 and rom_val[s[i]] > rom_val[s[i - 1]]:
+                            int_val += rom_val[s[i]] - 2 * rom_val[s[i - 1]]
+                        else:
+                            int_val += rom_val[s[i]]
+                    return int_val
+            x = input("Input Roman Numeral: ")
+            print("Its Integer Value is",py_Value2().roman_to_int(x))
 
-r = Roman()
-choice = input("Choose (1) Integer to Roman or (2) Roman to Integer: ")
-
-if choice == '1':
-    n = int(input("Enter Integer: "))
-    print("Roman Numeral:", r.int_to_roman(n))
-elif choice == '2':
-    roman_input = input("Enter Roman Numeral: ").upper()
-    print("Integer:", r.roman_to_int(roman_input))
-else:
-    print("Invalid choice")
+        if choose == "3":
+            break
+    else:
+        print("Invalid Input")
+print("Thank you for using converter.")
+print("Done by Roll number 53,52,51 of KOC25.")
